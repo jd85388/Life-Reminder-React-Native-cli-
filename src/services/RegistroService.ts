@@ -51,7 +51,7 @@ export interface ResumenSalud {
 }
 
 class RegistroService {
-  private readonly baseUrl = 'http://192.168.80.11:3000/api';
+  private readonly baseUrl = 'http://10.0.2.2:3000/api';
 
   // Obtener historial médico completo
   async obtenerHistorialMedico(filtros?: FiltrosRegistro): Promise<RegistroMedico[]> {

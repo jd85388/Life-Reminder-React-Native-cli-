@@ -1,7 +1,7 @@
 // src/services/ApiService.ts
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const BASE_URL = 'http://192.168.80.11:3000';
+const BASE_URL = 'http://10.0.2.2:3000';
 
 class ApiService {
   // Método para hacer peticiones autenticadas
