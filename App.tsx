@@ -7,12 +7,18 @@
 
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { AuthProvider } from './src/context/AuthContext';
 import AnimatedSplash from './src/Screens/AnimatedSplash';
 import Home from './src/Screens/Home';
 import Registro from './src/Screens/Registro';
 import Login from './src/Screens/Login';
 import Recuperacion from './src/Screens/Recuperacion';
+import Dashboard from './src/Screens/Dashboard';
+import ConsultasScreen from './src/Screens/ConsultasScreen';
+import MedicamentosScreen from './src/Screens/MedicamentosScreen';
+import RecordatoriosScreen from './src/Screens/RecordatoriosScreen';
+import RegistrosScreen from './src/Screens/RegistrosScreen';
 
 export type RootStackParamList = {
   animatedSplash: undefined;
@@ -20,20 +26,32 @@ export type RootStackParamList = {
   Registro: undefined;
   Login: undefined;
   Recuperacion: undefined;
+  Dashboard: undefined;
+  ConsultasScreen: undefined;
+  MedicamentosScreen: undefined;
+  RecordatoriosScreen: undefined;
+  RegistrosScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="animatedSplash">
-        <Stack.Screen name="animatedSplash" component={AnimatedSplash} />
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Registro" component={Registro} />
-        <Stack.Screen name="Recuperacion" component={Recuperacion} />
+    <AuthProvider>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="animatedSplash">
+          <Stack.Screen name="animatedSplash" component={AnimatedSplash} />
+          <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Registro" component={Registro} />
+          <Stack.Screen name="Recuperacion" component={Recuperacion} />
+          <Stack.Screen name="Dashboard" component={Dashboard} />
+          <Stack.Screen name="ConsultasScreen" component={ConsultasScreen} />
+          <Stack.Screen name="MedicamentosScreen" component={MedicamentosScreen} />
+          <Stack.Screen name="RecordatoriosScreen" component={RecordatoriosScreen} />
+          <Stack.Screen name="RegistrosScreen" component={RegistrosScreen} />
         </Stack.Navigator>
-        </NavigationContainer>
+      </NavigationContainer>
+    </AuthProvider>
   );
 }

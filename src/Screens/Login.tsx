@@ -19,7 +19,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
-import AnimacionYa from '../components/AnimacionMovil';
 import AnimacionEfecto from '../components/AnimacionElement';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
@@ -34,7 +33,6 @@ export default function Login() {
   const [error, setError] = useState('');
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { width } = useWindowDimensions();
-  const logoSize = Math.min(width * 0.42, 180);
   const cardWidth = Math.min(width * 0.94, 420);
 
   useEffect(() => {
@@ -73,7 +71,7 @@ export default function Login() {
         await AsyncStorage.removeItem('correo');
         await AsyncStorage.removeItem('password');
       }
-      const r = await fetch('http://192.168.0.12/Views/ingreso', {
+      const r = await fetch('http://192.168.80.11:3000/Views/ingreso', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ correo, password })
@@ -102,7 +100,7 @@ export default function Login() {
               <View style={styles.container}>
                 <Image
                   source={require('../assets/imagen/logoLife.png')}
-                  style={[styles.logo, { width: 400, height: 340 }]}
+                  style={styles.logoImage}
                 />
 
                 <View style={[styles.card, { width: cardWidth }]}>
@@ -269,5 +267,6 @@ const styles = StyleSheet.create({
     marginTop: 18
   },
   smallText: { color: 'rgba(255,255,255,0.9)', fontSize: 13 },
-  linkText: { color: '#fff', fontWeight: '700', marginLeft: 6 }
+  linkText: { color: '#fff', fontWeight: '700', marginLeft: 6 },
+  logoImage: { width: 400, height: 340 }
 });
