@@ -19,6 +19,8 @@ import ConsultasScreen from './src/Screens/ConsultasScreen';
 import MedicamentosScreen from './src/Screens/MedicamentosScreen';
 import RecordatoriosScreen from './src/Screens/RecordatoriosScreen';
 import RegistrosScreen from './src/Screens/RegistrosScreen';
+import RegistroMedicamentoScreen from './src/Screens/RegistroMedicamentoScreen';
+import RegistroConsultaScreen from './src/Screens/RegistroConsultaScreen';
 
 export type RootStackParamList = {
   animatedSplash: undefined;
@@ -31,6 +33,8 @@ export type RootStackParamList = {
   MedicamentosScreen: undefined;
   RecordatoriosScreen: undefined;
   RegistrosScreen: undefined;
+  RegistroMedicamentoScreen: undefined;
+  RegistroConsultaScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -50,6 +54,8 @@ export default function App() {
           <Stack.Screen name="MedicamentosScreen" component={MedicamentosScreen} />
           <Stack.Screen name="RecordatoriosScreen" component={RecordatoriosScreen} />
           <Stack.Screen name="RegistrosScreen" component={RegistrosScreen} />
+          <Stack.Screen name="RegistroMedicamentoScreen" component={RegistroMedicamentoScreen} />
+          <Stack.Screen name="RegistroConsultaScreen" component={RegistroConsultaScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </AuthProvider>
