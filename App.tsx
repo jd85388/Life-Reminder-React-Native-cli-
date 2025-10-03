@@ -34,6 +34,7 @@ export type RootStackParamList = {
   contactoSoporte: undefined;
   configurarApp: undefined;
   cambioContrasena: undefined;
+  
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();

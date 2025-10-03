@@ -157,6 +157,9 @@ export default function Login() {
                       <Pressable onPress={() => navigation.navigate('Perfil')}>
                         <Text style={styles.forgotText}>otra</Text>
                       </Pressable>
+                      <Pressable onPress={() => navigation.navigate('Perfil')}>
+                        <Text style={styles.forgotText}>menu</Text>
+                      </Pressable>
                     </View>
 
                     {error ? <Text style={styles.errorText}>{error}</Text> : null}
