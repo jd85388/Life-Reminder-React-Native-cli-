@@ -7,6 +7,8 @@ import { RootStackParamList } from '../../App';
 import LinearGradient from 'react-native-linear-gradient';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import EnhancedNotificationService from '../services/EnhancedNotificationService';
+import MedicamentoService, { CrearMedicamentoData } from '../services/MedicamentoService';
 
 export default function RegistroMedicamentoScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -20,10 +22,49 @@ export default function RegistroMedicamentoScreen() {
       Alert.alert('Error', 'Por favor, complete todos los campos.');
       return;
     }
-    // Aquí irá la lógica para registrar el medicamento en el backend
-    console.log({ nombre, dosis, frecuencia, via });
-    Alert.alert('Éxito', 'Medicamento registrado correctamente.');
-    navigation.goBack();
+
+    try {
+      // Crear objeto medicamento
+      const nuevoMedicamento: CrearMedicamentoData = {
+        nombre,
+        dosis: parseFloat(dosis) || 0,
+        unidad: 'mg', // Por defecto, se puede hacer dinámico después
+        frecuencia,
+        viaAdministracion: via,
+        duracion: {
+          inicio: new Date(),
+          fin: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 días por defecto
+        },
+        recetadoPor: 'Doctor',
+        descripcion: 'Medicamento registrado desde la app',
+        causaUso: 'Tratamiento',
+      };
+
+      // Registrar medicamento en el backend
+      const medicamentoRegistrado = await MedicamentoService.crearMedicamento(nuevoMedicamento);
+      
+      // Programar notificaciones automáticamente
+      await EnhancedNotificationService.scheduleNotificationsForMedication(medicamentoRegistrado);
+      
+      Alert.alert(
+        '✅ Éxito', 
+        'Medicamento registrado correctamente y recordatorios programados.',
+        [
+          {
+            text: 'Ver Configuración',
+            onPress: () => navigation.navigate('Settings'),
+          },
+          {
+            text: 'OK',
+            onPress: () => navigation.goBack(),
+          },
+        ]
+      );
+      
+    } catch (error) {
+      console.error('Error registrando medicamento:', error);
+      Alert.alert('Error', 'No se pudo registrar el medicamento. Intente nuevamente.');
+    }
   };
 
   return (

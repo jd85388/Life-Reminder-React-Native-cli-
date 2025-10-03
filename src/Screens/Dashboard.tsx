@@ -156,9 +156,18 @@ export default function Dashboard() {
             </View>
           </View>
           
-          <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
-            <Ionicons name="log-out-outline" size={24} color="#fff" />
-          </TouchableOpacity>
+          <View style={styles.headerButtons}>
+            <TouchableOpacity 
+              onPress={() => navigation.navigate('Settings')} 
+              style={styles.settingsButton}
+            >
+              <Ionicons name="settings-outline" size={24} color="#fff" />
+            </TouchableOpacity>
+            
+            <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
+              <Ionicons name="log-out-outline" size={24} color="#fff" />
+            </TouchableOpacity>
+          </View>
         </View>
         
         <AnimacionElement duration={2000}>
@@ -282,6 +291,16 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#fff',
     fontWeight: 'bold',
+  },
+  headerButtons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  settingsButton: {
+    padding: 8,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    marginRight: 8,
   },
   logoutButton: {
     padding: 8,

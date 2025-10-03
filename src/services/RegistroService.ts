@@ -50,8 +50,43 @@ export interface ResumenSalud {
   }[];
 }
 
+export interface Usuario {
+  _id?: string;
+  nombre: string;
+  apellidos: string;
+  email: string;
+  password?: string;
+  telefono?: string;
+  fechaNacimiento: string;
+  genero: 'masculino' | 'femenino' | 'otro';
+  tipoSangre?: string;
+  alergias?: string[];
+  enfermedadesCronicas?: string[];
+  contactoEmergencia?: {
+    nombre: string;
+    telefono: string;
+    relacion: string;
+  };
+  fechaRegistro?: string;
+  activo?: boolean;
+}
+
+export interface CredencialesLogin {
+  email: string;
+  password: string;
+}
+
+export interface RespuestaAuth {
+  success: boolean;
+  data?: {
+    usuario: Usuario;
+    token: string;
+  };
+  error?: string;
+}
+
 class RegistroService {
-  private readonly baseUrl = 'http://10.0.2.2:3000/api';
+  private readonly baseUrl = 'http://192.168.80.11:3000/api';
 
   // Obtener historial médico completo
   async obtenerHistorialMedico(filtros?: FiltrosRegistro): Promise<RegistroMedico[]> {
@@ -294,6 +329,133 @@ class RegistroService {
       valido: errores.length === 0,
       errores,
     };
+  }
+
+  // Registrar nuevo usuario/paciente
+  async registrarUsuario(datosUsuario: Omit<Usuario, '_id' | 'fechaRegistro' | 'activo'>): Promise<RespuestaAuth> {
+    try {
+      const validacion = this.validarDatosUsuario(datosUsuario);
+      if (!validacion.valido) {
+        throw new Error(validacion.errores.join(', '));
+      }
+
+      const response = await ApiService.post(`${this.baseUrl}/auth/registro`, datosUsuario);
+      
+      if (!response.success) {
+        throw new Error(response.error || 'Error al registrar usuario');
+      }
+
+      return response;
+    } catch (error) {
+      console.error('Error registrando usuario:', error);
+      throw error;
+    }
+  }
+
+  // Iniciar sesión
+  async iniciarSesion(credenciales: CredencialesLogin): Promise<RespuestaAuth> {
+    try {
+      if (!credenciales.email || !credenciales.password) {
+        throw new Error('Email y contraseña son obligatorios');
+      }
+
+      const response = await ApiService.post(`${this.baseUrl}/auth/login`, credenciales);
+      
+      if (!response.success) {
+        throw new Error(response.error || 'Error al iniciar sesión');
+      }
+
+      return response;
+    } catch (error) {
+      console.error('Error iniciando sesión:', error);
+      throw error;
+    }
+  }
+
+  // Obtener perfil de usuario
+  async obtenerPerfil(): Promise<Usuario> {
+    try {
+      const response = await ApiService.get(`${this.baseUrl}/auth/perfil`);
+      
+      if (!response.success) {
+        throw new Error(response.error || 'Error al obtener perfil');
+      }
+
+      return response.data;
+    } catch (error) {
+      console.error('Error obteniendo perfil:', error);
+      throw error;
+    }
+  }
+
+  // Actualizar perfil de usuario
+  async actualizarPerfil(datosActualizacion: Partial<Usuario>): Promise<Usuario> {
+    try {
+      const response = await ApiService.put(`${this.baseUrl}/auth/perfil`, datosActualizacion);
+      
+      if (!response.success) {
+        throw new Error(response.error || 'Error al actualizar perfil');
+      }
+
+      return response.data;
+    } catch (error) {
+      console.error('Error actualizando perfil:', error);
+      throw error;
+    }
+  }
+
+  // Validar datos de usuario
+  validarDatosUsuario(usuario: Partial<Usuario>): { valido: boolean; errores: string[] } {
+    const errores: string[] = [];
+
+    if (!usuario.nombre?.trim()) {
+      errores.push('El nombre es obligatorio');
+    }
+
+    if (!usuario.apellidos?.trim()) {
+      errores.push('Los apellidos son obligatorios');
+    }
+
+    if (!usuario.email?.trim()) {
+      errores.push('El email es obligatorio');
+    } else if (!this.validarEmail(usuario.email)) {
+      errores.push('El formato del email no es válido');
+    }
+
+    if (!usuario.password?.trim()) {
+      errores.push('La contraseña es obligatoria');
+    } else if (usuario.password.length < 6) {
+      errores.push('La contraseña debe tener al menos 6 caracteres');
+    }
+
+    if (!usuario.fechaNacimiento) {
+      errores.push('La fecha de nacimiento es obligatoria');
+    }
+
+    if (!usuario.genero) {
+      errores.push('El género es obligatorio');
+    }
+
+    if (usuario.telefono && !this.validarTelefono(usuario.telefono)) {
+      errores.push('El formato del teléfono no es válido');
+    }
+
+    return {
+      valido: errores.length === 0,
+      errores,
+    };
+  }
+
+  // Validar email
+  private validarEmail(email: string): boolean {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  }
+
+  // Validar teléfono
+  private validarTelefono(telefono: string): boolean {
+    const regex = /^[+]?[0-9\s-()]{10,}$/;
+    return regex.test(telefono);
   }
 
   // Formatear fecha para mostrar
