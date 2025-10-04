@@ -18,23 +18,25 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../App';
-import AnimacionYa from '../components/AnimacionMovil';
-import AnimacionEfecto from '../components/AnimacionElement';
+import AnimacionEfecto from '../../components/AnimacionElement';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useAuth } from '../../context/AuthContext';
+import Rutas, { RutasRootStackParamList } from '../../navigation/navegacionVistas';
+
+type LoginScreenNavigationProp = NativeStackNavigationProp<RutasRootStackParamList, "Login">;
 
 export default function Login() {
+  const { login } = useAuth();
   const [correo, setCorreo] = useState('');
   const [password, setPassword] = useState('');
   const [recordar, setRecordar] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState('');
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<LoginScreenNavigationProp>();
   const { width } = useWindowDimensions();
-  const logoSize = Math.min(width * 0.42, 180);
   const cardWidth = Math.min(width * 0.94, 420);
 
   useEffect(() => {
@@ -73,13 +75,16 @@ export default function Login() {
         await AsyncStorage.removeItem('correo');
         await AsyncStorage.removeItem('password');
       }
-      const r = await fetch('http://192.168.0.12/Views/ingreso', {
+      const r = await fetch('http://192.168.80.11:3000/Views/ingreso', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ correo, password })
       });
       const d = await r.json();
-      if (r.ok) navigation.navigate('Home');
+      if (r.ok) {
+        login(d.user);
+        navigation.navigate('Dashboard');
+      }
       else setError(d?.message || 'Credenciales incorrectas');
     } catch {
       setError('Error de red o servidor');
@@ -95,14 +100,14 @@ export default function Login() {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <LinearGradient colors={['#4A90E2', '#1E90FF']} style={styles.flex}>
             <ImageBackground
-              source={require('../assets/imagen/fondo2.png')}
+              source={require('../../assets/imagen/fondo2.png')}
               style={styles.bg}
               resizeMode="cover"
             >
               <View style={styles.container}>
                 <Image
-                  source={require('../assets/imagen/logoLife.png')}
-                  style={[styles.logo, { width: 400, height: 340 }]}
+                  source={require('../../assets/imagen/logoLife.png')}
+                  style={styles.logoImage}
                 />
 
                 <View style={[styles.card, { width: cardWidth }]}>
@@ -154,12 +159,6 @@ export default function Login() {
                       <Pressable onPress={() => navigation.navigate('Recuperacion')}>
                         <Text style={styles.forgotText}>¿Olvidaste la contraseña?</Text>
                       </Pressable>
-                      <Pressable onPress={() => navigation.navigate('Perfil')}>
-                        <Text style={styles.forgotText}>otra</Text>
-                      </Pressable>
-                      <Pressable onPress={() => navigation.navigate('Perfil')}>
-                        <Text style={styles.forgotText}>menu</Text>
-                      </Pressable>
                     </View>
 
                     {error ? <Text style={styles.errorText}>{error}</Text> : null}
@@ -181,6 +180,9 @@ export default function Login() {
                   <Text style={styles.smallText}>¿No tienes cuenta? </Text>
                   <Pressable onPress={() => navigation.navigate('Registro')}>
                     <Text style={styles.linkText}>Regístrate</Text>
+                  </Pressable>
+                  <Pressable onPress={() => navigation.navigate('Registros')}>
+                    <Text style={styles.linkText}>prueba</Text>
                   </Pressable>
                 </View>
               </View>
@@ -275,5 +277,6 @@ const styles = StyleSheet.create({
     marginTop: 18
   },
   smallText: { color: 'rgba(255,255,255,0.9)', fontSize: 13 },
-  linkText: { color: '#fff', fontWeight: '700', marginLeft: 6 }
+  linkText: { color: '#fff', fontWeight: '700', marginLeft: 6 },
+  logoImage: { width: 400, height: 340 }
 });

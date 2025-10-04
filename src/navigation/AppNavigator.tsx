@@ -1,8 +1,8 @@
 // src/navigation/AppNavigator.tsx
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import SplashScreen from '../Screens/Login';
-import HomeScreen from '../Screens/Home';
+import SplashScreen from '../Screens/Lobby/Login';
+import HomeScreen from '../Screens/Lobby/Home';
 
 const Stack = createNativeStackNavigator();
 
