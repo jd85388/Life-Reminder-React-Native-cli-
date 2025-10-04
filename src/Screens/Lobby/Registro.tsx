@@ -69,7 +69,7 @@ export default function RegistroScreen({ navigation }: any) {
     if (!validarCampos()) return;
 
     try {
-      const response = await fetch('http://192.168.0.12:3000/Views/registrar', {
+      const response = await fetch('http://10.0.2.2:3000/Views/registrar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -140,7 +140,7 @@ export default function RegistroScreen({ navigation }: any) {
 
   return (
     <ImageBackground
-      source={require('../assets/imagen/fondo2.png')}
+      source={require('../../assets/imagen/fondo2.png')}
       style={{ flex: 1 }}
       resizeMode="cover"
     >

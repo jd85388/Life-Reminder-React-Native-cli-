@@ -5,56 +5,46 @@
  * @format
  */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navigation/native-stack';
-import AnimatedSplash from './src/Screens/AnimatedSplash';
-import Home from './src/Screens/Home';
-import Registro from './src/Screens/Registro';
-import Login from './src/Screens/Login';
-import Recuperacion from './src/Screens/Recuperacion';
-import ConfiguracionPerfil from './src/Screens/Perfil';
-import CambiarDatos from './src/Screens/cambioDatos';
-import CambiarFotoScreen from './src/Screens/cambioFoto';
-import InfoLifeReminder from './src/Screens/informacion';
-import ContactarSoporteScreen from './src/Screens/contactoSoporte';
-import ConfiguracionAppScreen from './src/Screens/configurarApp';
-import CambioContrasenaScreen from './src/Screens/cambioContrasena';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { AuthProvider } from './src/context/AuthContext';
+import { ThemeProvider } from './src/context/ThemeContext';
+import { LanguageProvider } from './src/context/LanguageContext';
+import Rutas from './src/navigation/navegacionVistas';
+import AnimatedSplash from './src/Screens/Animaciones/AnimatedSplash';
 
 export type RootStackParamList = {
   animatedSplash: undefined;
-  Home: undefined;
-  Registro: undefined;
-  Login: undefined;
-  Recuperacion: undefined;
-  Perfil: undefined;
-  cambioDatos: undefined;
-  cambioFoto: undefined;
-  informacion: undefined;
-  contactoSoporte: undefined;
-  configurarApp: undefined;
-  cambioContrasena: undefined;
+  Rutas: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
+
 export default function App() {
+  const [isSplashVisible, setIsSplashVisible] =useState(true);
+  
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsSplashVisible(false);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, []);
+  
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="animatedSplash">
-        <Stack.Screen name="animatedSplash" component={AnimatedSplash} />
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Registro" component={Registro} />
-        <Stack.Screen name="Recuperacion" component={Recuperacion} />
-        <Stack.Screen name="Perfil" component={ConfiguracionPerfil} />
-        <Stack.Screen name="cambioDatos" component={CambiarDatos} />
-        <Stack.Screen name="cambioFoto" component={CambiarFotoScreen} />
-        <Stack.Screen name="informacion" component={InfoLifeReminder} />
-        <Stack.Screen name="contactoSoporte" component={ContactarSoporteScreen} />
-        <Stack.Screen name="configurarApp" component={ConfiguracionAppScreen} />
-        <Stack.Screen name="cambioContrasena" component={CambioContrasenaScreen} />
-        </Stack.Navigator>
-        </NavigationContainer>
-  );
+      <AuthProvider>
+        <ThemeProvider>
+          <LanguageProvider>
+            <NavigationContainer>
+              <Stack.Navigator screenOptions={{ headerShown: false}}>
+                <Stack.Screen name="animatedSplash" component={AnimatedSplash}/>
+                <Stack.Screen name="Rutas" component={Rutas}/>
+              </Stack.Navigator>
+            </NavigationContainer>
+          </LanguageProvider>
+        </ThemeProvider>
+      </AuthProvider>
+    );
 }

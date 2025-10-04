@@ -12,19 +12,19 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../App';
-import AnimacionYa from '../components/AnimacionMovil';
-import AnimacionEfecto from '../components/AnimacionElement';
+import AnimacionYa from '../../components/AnimacionMovil';
+import AnimacionEfecto from '../../components/AnimacionElement';
+import { RutasRootStackParamList } from '../../navigation/navegacionVistas';
 
 const { width, height } = Dimensions.get('window');
 
 export default function Home() {
   const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+    useNavigation<NativeStackNavigationProp<RutasRootStackParamList>>();
 
   return (
     <ImageBackground
-      source={require('../assets/imagen/fondo2.png')}
+      source={require('../../assets/imagen/fondo2.png')}
       style={styles.background}
       resizeMode="cover"
     >
@@ -32,7 +32,7 @@ export default function Home() {
         {/* Parte superior */}
         <View style={styles.topSection}>
           <Image
-            source={require('../assets/imagen/caraBonita.png')}
+            source={require('../../assets/imagen/caraBonita.png')}
             style={styles.logo}
           />
           <AnimacionYa style={styles.title} duration={2000}>

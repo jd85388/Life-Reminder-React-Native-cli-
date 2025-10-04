@@ -40,7 +40,7 @@ export default function RecuperacionCuenta() {
 
   return (
     <ImageBackground
-      source={require('../assets/imagen/fondo2.png')}  
+      source={require('../../assets/imagen/fondo2.png')}  
       style={styles.background}
       resizeMode="cover"
     >
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 24,
-    backgroundColor: 'rgba(0,0,0,0.4)', // leve overlay para contraste
+    backgroundColor: 'rgba(0,0,0,0.4)', 
   },
   title: {
     fontSize: 28,
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '90%',
-    backgroundColor: '#ffffff', // botón blanco
+    backgroundColor: '#ffffff', 
     paddingVertical: 14,
     borderRadius: 12,
     alignItems: 'center',

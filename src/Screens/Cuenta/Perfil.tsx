@@ -12,7 +12,7 @@ import {
 export default function ConfiguracionPerfil({ navigation }: any) {
   return (
     <ImageBackground
-      source={require('../assets/imagen/fondo2.png')}
+      source={require('../../assets/imagen/fondo2.png')}
       style={styles.background}
       resizeMode="cover"
     >
